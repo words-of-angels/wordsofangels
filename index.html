@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Words of Angels - Global Poetry Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .poem-font { font-family: 'Playfair Display', serif; }
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://picsum.photos/id/1015/2000/1200') center/cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-feather text-3xl text-amber-700"></i>
+                <div>
+                    <span class="text-2xl font-bold tracking-tight">Words of Angels</span>
+                    <span class="text-xs block -mt-1 text-amber-600">Poetry from the Soul</span>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#" onclick="navigateTo('feed')" class="hover:text-amber-700 transition-colors">Discover</a>
+                <a href="#" onclick="navigateTo('post')" class="hover:text-amber-700 transition-colors">Share Poem</a>
+                <a href="#" onclick="navigateTo('profile')" class="hover:text-amber-700 transition-colors">My Work</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="showPricing()" 
+                        class="px-5 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-full text-sm font-semibold transition-all">
+                    <i class="fa-solid fa-lock mr-1"></i> Subscribe $9/mo
+                </button>
+                <button onclick="toggleLogin()" 
+                        class="px-6 py-2 border border-gray-300 hover:bg-gray-100 rounded-full text-sm font-medium">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <!-- Hero / Landing -->
+        <div id="hero-section" class="hero-bg h-screen flex items-center text-white">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h1 class="text-6xl md:text-7xl font-bold poem-font mb-6 leading-tight">
+                    Where angels whisper through words
+                </h1>
+                <p class="text-xl md:text-2xl mb-10 max-w-2xl mx-auto">
+                    A global sanctuary for poets. Share your verses. Read the world's soul. Connect through words.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="navigateTo('feed'); showToast('Welcome to Words of Angels!')" 
+                            class="px-10 py-4 bg-white text-amber-900 rounded-2xl font-semibold text-lg hover:scale-105 transition-all">
+                        Explore Poems
+                    </button>
+                    <button onclick="showPricing()" 
+                            class="px-10 py-4 border-2 border-white hover:bg-white/10 rounded-2xl font-semibold text-lg transition-all">
+                        Join for $9/month
+                    </button>
+                </div>
+                <p class="mt-8 text-sm opacity-75">No ads • Private • Poet-first</p>
+            </div>
+        </div>
+
+        <!-- Feed Section -->
+        <div id="feed-section" class="hidden max-w-4xl mx-auto px-6 py-12">
+            <div class="flex justify-between items-end mb-8">
+                <h2 class="text-4xl font-bold poem-font">Global Feed</h2>
+                <div class="flex gap-3">
+                    <button onclick="filterPoems('all')" class="active-filter px-5 py-2 text-sm rounded-full border">All</button>
+                    <button onclick="filterPoems('original')" class="px-5 py-2 text-sm rounded-full border">Originals</button>
+                    <button onclick="filterPoems('replies')" class="px-5 py-2 text-sm rounded-full border">Replies</button>
+                </div>
+            </div>
+            
+            <div id="poems-feed" class="space-y-8"></div>
+        </div>
+
+        <!-- Post Poem Section -->
+        <div id="post-section" class="hidden max-w-2xl mx-auto px-6 py-12">
+            <h2 class="text-4xl font-bold poem-font mb-8">Share Your Poem</h2>
+            <form id="post-form" onsubmit="postPoem(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Title</label>
+                    <input type="text" id="poem-title" required
+                           class="w-full px-5 py-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-amber-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Your Poem</label>
+                    <textarea id="poem-content" rows="12" required
+                              class="w-full px-5 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:border-amber-600 poem-font resize-none"></textarea>
+                </div>
+                <div class="flex gap-4">
+                    <button type="submit" 
+                            class="flex-1 py-4 bg-amber-700 text-white rounded-2xl font-semibold hover:bg-amber-800 transition-all">
+                        Publish to the World
+                    </button>
+                    <button type="button" onclick="navigateTo('feed')"
+                            class="flex-1 py-4 border border-gray-300 rounded-2xl font-medium">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile-section" class="hidden max-w-4xl mx-auto px-6 py-12">
+            <div id="profile-header" class="flex items-center gap-6 mb-10">
+                <div class="w-24 h-24 bg-amber-100 rounded-3xl flex items-center justify-center text-5xl">📜</div>
+                <div>
+                    <h2 id="profile-name" class="text-4xl font-bold">Alex Rivera</h2>
+                    <p id="profile-username" class="text-gray-600">@poetbythesea • Member since 2025</p>
+                    <p class="mt-2 max-w-md">Writing is breathing with ink. 47 poems shared • 1.2k readers</p>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl font-semibold mb-6">My Poems</h3>
+            <div id="my-poems" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+    </div>
+
+    <!-- Poem Modal -->
+    <div id="poem-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div class="p-8">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 id="modal-title" class="text-3xl poem-font font-bold"></h3>
+                        <p id="modal-author" class="text-gray-500 mt-1"></p>
+                    </div>
+                    <button onclick="closeModal()" class="text-3xl leading-none hover:text-gray-400">×</button>
+                </div>
+                
+                <div id="modal-content" class="poem-font text-lg leading-relaxed my-10 whitespace-pre-wrap"></div>
+                
+                <div class="border-t pt-6">
+                    <h4 class="font-medium mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-comment-dots"></i> Replies (3)
+                    </h4>
+                    <div id="modal-replies" class="space-y-6 text-sm"></div>
+                </div>
+            </div>
+            
+            <!-- Reply form -->
+            <div class="border-t p-8 bg-gray-50">
+                <textarea id="reply-text" rows="3" 
+                          class="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:border-amber-600"
+                          placeholder="Write a thoughtful reply..."></textarea>
+                <button onclick="submitReply()" 
+                        class="mt-4 px-8 py-3 bg-amber-700 text-white rounded-2xl text-sm font-medium">
+                    Post Reply
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Modal -->
+    <div id="pricing-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-10">
+            <h2 class="text-3xl font-bold text-center poem-font mb-2">Unlock Words of Angels</h2>
+            <p class="text-center text-gray-600 mb-8">Support poets. Remove limits. Connect deeper.</p>
+            
+            <div class="border border-amber-200 rounded-3xl p-8 mb-8 bg-gradient-to-b from-amber-50 to-white">
+                <div class="text-center">
+                    <div class="text-5xl font-bold">$9</div>
+                    <div class="text-sm text-gray-500">per month</div>
+                </div>
+                <ul class="mt-8 space-y-4">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Unlimited posting</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Priority in global feed</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Private messaging</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Ad-free experience</li>
+                </ul>
+            </div>
+            
+            <button onclick="mockPayment()" 
+                    class="w-full py-5 bg-amber-700 hover:bg-amber-800 text-white rounded-2xl font-semibold text-lg mb-4">
+                Subscribe Now - Cancel Anytime
+            </button>
+            <button onclick="hidePricing()" 
+                    class="w-full py-4 text-gray-500 hover:text-gray-700">
+                Maybe later
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-gray-900 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-text"></span>
+    </div>
+
+    <script>
+        // Mock poems data
+        let poems = [
+            {
+                id: 1,
+                title: "Whispers of the Tide",
+                author: "Elena Voss",
+                content: "The sea remembers every ship that passed,\nEvery sailor who whispered your name to the waves.\nI stand barefoot where foam kisses stone,\nAnd wonder if the ocean still carries your voice.",
+                likes: 124,
+                replies: [
+                    { author: "Marco Ruiz", text: "This gave me chills. Beautiful imagery." },
+                    { author: "Sara Kim", text: "The last line... wow." }
+                ],
+                type: "original"
+            },
+            {
+                id: 2,
+                title: "Reply to 'Whispers of the Tide'",
+                author: "Jamal Adebayo",
+                content: "And yet the tide returns,\nCarrying fragments of forgotten dreams.\nWe rebuild sandcastles every dawn,\nKnowing the sea will teach us humility again.",
+                likes: 67,
+                replies: [],
+                type: "reply"
+            }
+        ];
+
+        let myPoems = [];
+
+        function renderFeed() {
+            const container = document.getElementById('poems-feed');
+            container.innerHTML = '';
+            
+            poems.forEach(poem => {
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all cursor-pointer border border-transparent hover:border-amber-100`;
+                card.innerHTML = `
+                    <div class="flex justify-between">
+                        <div>
+                            <h3 class="text-2xl poem-font font-semibold">${poem.title}</h3>
+                            <p class="text-sm text-gray-500 mt-1">by ${poem.author}</p>
+                        </div>
+                        <span class="text-xs px-3 py-1 bg-amber-100 text-amber-700 rounded-full self-start">${poem.type}</span>
+                    </div>
+                    <p class="poem-font text-lg leading-relaxed mt-6 line-clamp-4">${poem.content.replace(/\n/g, '<br>')}</p>
+                    <div class="flex justify-between items-center mt-8 pt-6 border-t text-sm">
+                        <div class="flex items-center gap-6">
+                            <button onclick="likePoem(${poem.id}); event.stopImmediatePropagation()" class="flex items-center gap-1 hover:text-red-500 transition-colors">
+                                <i class="fa-solid fa-heart"></i> <span>${poem.likes}</span>
+                            </button>
+                            <button onclick="openPoem(${poem.id}); event.stopImmediatePropagation()" class="flex items-center gap-1 hover:text-amber-700 transition-colors">
+                                <i class="fa-solid fa-comment-dots"></i> <span>${poem.replies.length}</span>
+                            </button>
+                        </div>
+                        <button onclick="openPoem(${poem.id}); event.stopImmediatePropagation()" 
+                                class="text-amber-700 hover:underline text-sm font-medium">Read full →</button>
+                    </div>
+                `;
+                card.onclick = () => openPoem(poem.id);
+                container.appendChild(card);
+            });
+        }
+
+        function renderMyPoems() {
+            const container = document.getElementById('my-poems');
+            container.innerHTML = '';
+            
+            if (myPoems.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 italic">You haven't shared any poems yet. Start creating!</p>`;
+                return;
+            }
+            
+            myPoems.forEach(poem => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-3xl border';
+                card.innerHTML = `
+                    <h4 class="font-semibold">${poem.title}</h4>
+                    <p class="text-sm text-gray-500 mt-1 line-clamp-2">${poem.content.substring(0, 120)}...</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateProfileUI() {
+            if (!currentUser) return;
+            const nameEl = document.getElementById('profile-name');
+            const usernameEl = document.getElementById('profile-username');
+            if (nameEl) nameEl.textContent = currentUser.name;
+            if (usernameEl) usernameEl.textContent = `@${currentUser.username} • Member since ${currentUser.joined}`;
+        }
+
+        function postPoem(e) {
+            e.preventDefault();
+            const title = document.getElementById('poem-title').value;
+            const content = document.getElementById('poem-content').value;
+            
+            if (!title || !content) return;
+            
+            const newPoem = {
+                id: Date.now(),
+                title: title,
+                author: currentUser ? currentUser.name : "Alex Rivera",
+                content: content,
+                likes: 0,
+                replies: [],
+                type: "original"
+            };
+            
+            poems.unshift(newPoem);
+            myPoems.unshift(newPoem);
+            
+            document.getElementById('post-form').reset();
+            showToast('Poem published to the world!');
+            navigateTo('feed');
+            renderFeed();
+            renderMyPoems();
+        }
+
+        function openPoem(id) {
+            const poem = poems.find(p => p.id === id);
+            if (!poem) return;
+            
+            document.getElementById('modal-title').textContent = poem.title;
+            document.getElementById('modal-author').textContent = `by ${poem.author}`;
+            document.getElementById('modal-content').innerHTML = poem.content.replace(/\n/g, '<br>');
+            
+            const repliesContainer = document.getElementById('modal-replies');
+            repliesContainer.innerHTML = '';
+            
+            if (poem.replies.length === 0) {
+                repliesContainer.innerHTML = `<p class="text-gray-400 italic">No replies yet. Be the first!</p>`;
+            } else {
+                poem.replies.forEach(reply => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-gray-50 p-5 rounded-2xl';
+                    div.innerHTML = `<strong>${reply.author}:</strong> <span>${reply.text}</span>`;
+                    repliesContainer.appendChild(div);
+                });
+            }
+            
+            document.getElementById('poem-modal').classList.remove('hidden');
+            document.getElementById('poem-modal').dataset.currentPoemId = id;
+        }
+
+        function closeModal() {
+            document.getElementById('poem-modal').classList.add('hidden');
+        }
+
+        function submitReply() {
+            const textarea = document.getElementById('reply-text');
+            const text = textarea.value.trim();
+            if (!text) return;
+            
+            const poemId = parseInt(document.getElementById('poem-modal').dataset.currentPoemId);
+            const poem = poems.find(p => p.id === poemId);
+            
+            if (poem) {
+                poem.replies.unshift({
+                    author: "Alex Rivera",
+                    text: text
+                });
+                
+                textarea.value = '';
+                openPoem(poemId); // refresh modal
+                renderFeed();
+                showToast('Reply posted!');
+            }
+        }
+
+        function likePoem(id) {
+            const poem = poems.find(p => p.id === id);
+            if (poem) {
+                poem.likes++;
+                renderFeed();
+            }
+        }
+
+        function navigateTo(section) {
+            // Hide all sections
+            document.getElementById('hero-section').classList.add('hidden');
+            document.getElementById('feed-section').classList.add('hidden');
+            document.getElementById('post-section').classList.add('hidden');
+            document.getElementById('profile-section').classList.add('hidden');
+            
+            if (section === 'feed') {
+                document.getElementById('feed-section').classList.remove('hidden');
+                renderFeed();
+            } else if (section === 'post') {
+                document.getElementById('post-section').classList.remove('hidden');
+            } else if (section === 'profile') {
+                document.getElementById('profile-section').classList.remove('hidden');
+                renderMyPoems();
+            }
+        }
+
+        function showPricing() {
+            document.getElementById('pricing-modal').classList.remove('hidden');
+        }
+
+        function hidePricing() {
+            document.getElementById('pricing-modal').classList.add('hidden');
+        }
+
+        function mockPayment() {
+            hidePricing();
+            setTimeout(() => {
+                showToast('✅ Payment successful! Subscription active. Welcome to full access!');
+                // Simulate subscription badge
+                document.querySelectorAll('button[onclick="showPricing()"]').forEach(btn => {
+                    btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Subscribed';
+                    btn.disabled = true;
+                });
+            }, 800);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = message;
+            toast.classList.remove('hidden');
+            toast.style.transform = 'translateY(0)';
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                setTimeout(() => toast.classList.add('hidden'), 400);
+            }, 2800);
+        }
+
+        function toggleLogin() {
+            showSignupModal();
+        }
+
+        let currentUser = null;
+
+        function showSignupModal() {
+            if (currentUser) {
+                showToast("Already logged in as " + currentUser.name);
+                return;
+            }
+            
+            const modalHTML = `
+                <div id="signup-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-8">
+                        <h2 class="text-3xl font-bold poem-font text-center mb-2">Join Words of Angels</h2>
+                        <p class="text-center text-gray-600 mb-6">Create your poet profile</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Display Name</label>
+                                <input id="signup-name" type="text" value="Alex Rivera" 
+                                       class="w-full px-4 py-3 border rounded-2xl focus:outline-none focus:border-amber-600">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Username</label>
+                                <input id="signup-username" type="text" value="poetbythesea" 
+                                       class="w-full px-4 py-3 border rounded-2xl focus:outline-none focus:border-amber-600">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Email</label>
+                                <input id="signup-email" type="email" value="alex@example.com" 
+                                       class="w-full px-4 py-3 border rounded-2xl focus:outline-none focus:border-amber-600">
+                            </div>
+                        </div>
+                        
+                        <button onclick="createProfile()" 
+                                class="mt-6 w-full py-4 bg-amber-700 hover:bg-amber-800 text-white rounded-2xl font-semibold">
+                            Create Profile & Join
+                        </button>
+                        <button onclick="closeSignupModal()" 
+                                class="mt-3 w-full py-3 text-gray-500 hover:text-gray-700">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = modalHTML;
+            document.body.appendChild(tempDiv.firstElementChild);
+        }
+
+        function closeSignupModal() {
+            const modal = document.getElementById('signup-modal');
+            if (modal) modal.remove();
+        }
+
+        function createProfile() {
+            const name = document.getElementById('signup-name').value || "New Poet";
+            const username = document.getElementById('signup-username').value || "newpoet";
+            
+            currentUser = {
+                name: name,
+                username: username,
+                joined: new Date().getFullYear()
+            };
+            
+            closeSignupModal();
+            showToast(`Welcome, ${name}! Your profile is ready.`);
+            
+            // Update profile display
+            updateProfileUI();
+            navigateTo('profile');
+        }
+
+        function updateProfileUI() {
+            // For demo, we can log it
+            console.log("Profile updated:", currentUser);
+        }
+
+        function filterPoems(type) {
+            // Simple filter simulation
+            const buttons = document.querySelectorAll('#feed-section button');
+            buttons.forEach(b => b.classList.remove('active-filter', 'border-amber-700', 'bg-amber-50'));
+            
+            // For demo, just re-render all
+            renderFeed();
+            showToast(`Showing ${type} poems`);
+        }
+
+        // Initialize
+        window.onload = function() {
+            renderFeed();
+            // Start on feed for demo
+            navigateTo('feed');
+            
+            // Keyboard shortcut for modal close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape") {
+                    const modal = document.getElementById('poem-modal');
+                    if (!modal.classList.contains('hidden')) closeModal();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
